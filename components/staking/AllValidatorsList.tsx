@@ -49,21 +49,16 @@ const AllValidatorsList = ({
         width: '196px',
         align: 'right',
         render: (validator: Validator) => (
-          <ValidatorTokenAmountCell
-            amount={validator.votingPower}
-            symbol={coin.symbol}
-          />
-        ),
-      },
-      {
-        id: 'commission',
-        label: 'Commission',
-        width: '196px',
-        align: 'right',
-        render: (validator: Validator) => (
-          <Text fontWeight="$semibold">
-            {shiftDigits(validator.commission, 2)}%
-          </Text>
+          <>
+            <ValidatorTokenAmountCell
+                amount={validator.votingPower}
+                symbol={coin.symbol}
+            />
+            <Text fontWeight="$hairline">
+              Commission: {shiftDigits(validator.commission, 2)}%
+            </Text>
+            {hasApr && <Text fontWeight="$hairline">APR {validator.apr}%</Text>}
+          </>
         ),
       },
       {
@@ -88,18 +83,6 @@ const AllValidatorsList = ({
     ];
 
     const hasApr = !!validators[0]?.apr;
-
-    if (hasApr) {
-      _columns.splice(3, 0, {
-        id: 'apr',
-        label: 'APR',
-        width: '196px',
-        align: 'right',
-        render: (validator: Validator) => (
-          <Text fontWeight="$semibold">{validator.apr}%</Text>
-        ),
-      });
-    }
 
     return _columns;
   }, [chainName]);

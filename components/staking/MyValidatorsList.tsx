@@ -64,7 +64,7 @@ const MyValidatorsList = ({
         },
         {
           id: 'amount-staked',
-          label: 'Amount Staked',
+          label: 'Staked',
           width: '196px',
           align: 'right',
           render: (validator: Validator) => (
@@ -76,7 +76,7 @@ const MyValidatorsList = ({
         },
         {
           id: 'claimable-rewards',
-          label: 'Claimable Rewards',
+          label: 'Rewards',
           width: '196px',
           align: 'right',
           render: (validator: Validator) => (
