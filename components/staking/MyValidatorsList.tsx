@@ -33,7 +33,7 @@ const MyValidatorsList = ({
       return myValidators.filter((validator) => {
           const deleg = new BigNumber(validator.delegation);
 
-          return !deleg.isNaN() && deleg.isPositive() && deleg.isGreaterThanOrEqualTo(1);
+          return !deleg.isNaN() && deleg.isPositive() && deleg.isGreaterThanOrEqualTo(0.000001);
       })
   }
 
