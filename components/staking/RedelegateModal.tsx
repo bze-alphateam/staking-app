@@ -89,7 +89,7 @@ export const RedelegateModal = ({
       isOpen={modalControl.isOpen}
       onClose={closeRedelegateModal}
     >
-      <Box width={{ mobile: '100%', tablet: '$containerSm' }} mt="$6">
+      <Box width={{ mobile: '80%', tablet: '$containerSm' }} mt="$6" maxHeight={{mobile: "$viewHeight", tablet: '$containerSm'}}>
         <RedelegateLabel
           type="from"
           validatorName={selectedValidator?.name}
@@ -144,7 +144,7 @@ export const RedelegateModal = ({
         />
       </Box>
 
-      <Box mt="$12">
+      <Box m="$12">
         <Button
           intent="tertiary"
           onClick={onRedelegateClick}

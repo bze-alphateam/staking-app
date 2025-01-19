@@ -38,7 +38,7 @@ export const ValidatorInfoModal = ({
 
   return (
     <BasicModal title="Validator" isOpen={isOpen} onClose={onClose}>
-      <Box width={{ mobile: '100%', tablet: '$containerSm' }}>
+      <Box width={{ mobile: '100%', tablet: '$containerSm' }} maxHeight={{mobile: "$viewHeight", tablet: '$containerSm'}}>
         <StakingDelegate
           header={{
             title: selectedValidator.name,

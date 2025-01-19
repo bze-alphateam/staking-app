@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ChainName } from 'cosmos-kit';
 import {
   Text,
@@ -42,10 +42,10 @@ export const SelectValidatorModal = ({
         width: '196px',
         align: 'left',
         render: (validator: Validator) => (
-          <ValidatorNameCell
-            validatorName={validator.name}
-            validatorImg={logos[validator.address]}
-          />
+            <ValidatorNameCell
+                validatorName={validator.name}
+                validatorImg={logos[validator.address]}
+            />
         ),
       },
       {
@@ -54,21 +54,16 @@ export const SelectValidatorModal = ({
         width: '196px',
         align: 'right',
         render: (validator: Validator) => (
-          <ValidatorTokenAmountCell
-            amount={validator.votingPower}
-            symbol={coin.symbol}
-          />
-        ),
-      },
-      {
-        id: 'commission',
-        label: 'Commission',
-        width: '146px',
-        align: 'right',
-        render: (validator: Validator) => (
-          <Text fontWeight="$semibold">
-            {shiftDigits(validator.commission, 2)}%
-          </Text>
+            <>
+              <ValidatorTokenAmountCell
+                  amount={validator.votingPower}
+                  symbol={coin.symbol}
+              />
+              <Text fontWeight="$hairline">
+                Commission: {shiftDigits(validator.commission, 2)}%
+              </Text>
+              {hasApr && <Text fontWeight="$hairline">APR {validator.apr}%</Text>}
+            </>
         ),
       },
       {
@@ -95,18 +90,6 @@ export const SelectValidatorModal = ({
       },
     ];
 
-    if (hasApr) {
-      _columns.splice(3, 0, {
-        id: 'apr',
-        label: 'APR',
-        width: '106px',
-        align: 'right',
-        render: (validator: Validator) => (
-          <Text fontWeight="$semibold">{validator.apr}%</Text>
-        ),
-      });
-    }
-
     return _columns;
   }, [chainName]);
 
@@ -117,14 +100,14 @@ export const SelectValidatorModal = ({
       onClose={modalControl.onClose}
     >
       <Box
-        width={{ mobile: '100%', tablet: '$containerMd' }}
-        maxHeight="640px"
+        width={{ mobile: '$auto', tablet: '$containerMd' }}
+        maxHeight={"450px"}
         overflowY="scroll"
       >
         <ValidatorList
           columns={columns}
           data={allValidators}
-          tableProps={{ width: '$full' }}
+          tableProps={{ width: '100%' }}
           variant="ghost"
         />
       </Box>

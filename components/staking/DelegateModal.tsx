@@ -164,7 +164,7 @@ export const DelegateModal = ({
       isOpen={isOpen}
       onClose={onModalClose}
     >
-      <Box width={{ mobile: '100%', tablet: '$containerSm' }}>
+      <Box width={{ mobile: '100%', tablet: '$containerSm' }} maxHeight={"$viewWidth"}>
         <StakingDelegate
           header={{
             title: selectedValidator.name,
@@ -226,16 +226,18 @@ export const DelegateModal = ({
             ],
           }}
           footer={
-            <Button
-              intent="tertiary"
-              onClick={onDelegateClick}
-              disabled={
-                !isGreaterThanZero(amount) || isDelegating || isSimulating
-              }
-              isLoading={isDelegating}
-            >
-              Delegate
-            </Button>
+            <Box display={"flex"} flex={1} justifyContent="center" mb={"$12"}>
+              <Button
+                intent="tertiary"
+                onClick={onDelegateClick}
+                disabled={
+                  !isGreaterThanZero(amount) || isDelegating || isSimulating
+                }
+                isLoading={isDelegating}
+              >
+                Delegate
+              </Button>
+            </Box>
           }
         />
       </Box>

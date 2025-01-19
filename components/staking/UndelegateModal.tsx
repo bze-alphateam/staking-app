@@ -92,7 +92,10 @@ export const UndelegateModal = ({
       isOpen={modalControl.isOpen}
       onClose={closeUndelegateModal}
     >
-      <Box width={{ mobile: '100%', tablet: '$containerSm' }}>
+      <Box
+          width={{ mobile: '100%', tablet: '$containerSm' }}
+          maxHeight={{mobile: "$viewHeight", tablet: '$containerSm'}}
+      >
         <StakingDelegate
           header={{
             title: selectedValidator.name,
@@ -158,14 +161,16 @@ export const UndelegateModal = ({
             ],
           }}
           footer={
-            <Button
-              intent="tertiary"
-              onClick={onUndelegateClick}
-              disabled={!isGreaterThanZero(amount) || isUndelegating}
-              isLoading={isUndelegating}
-            >
-              Undelegate
-            </Button>
+            <Box display={"flex"} flex={1} justifyContent="center">
+              <Button
+                  intent="tertiary"
+                  onClick={onUndelegateClick}
+                  disabled={!isGreaterThanZero(amount) || isUndelegating}
+                  isLoading={isUndelegating}
+              >
+                Undelegate
+              </Button>
+            </Box>
           }
         />
       </Box>
