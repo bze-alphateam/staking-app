@@ -7,7 +7,7 @@ import {
   Divider,
   useColorModeValue,
 } from '@interchain-ui/react';
-import { dependencies, products, Project } from '@/config';
+import { dependencies, Project } from '@/config';
 
 function Product({ name, desc, link }: Project) {
   return (
@@ -126,12 +126,15 @@ export function Footer() {
         gridTemplateColumns={{ tablet: 'repeat(2, 1fr)' }}
         gap="$12"
         mb="$19"
+        attributes={{
+          mt: '$20',
+        }}
       >
         {dependencies.map((dependency) => (
           <Dependency key={dependency.name} {...dependency}></Dependency>
         ))}
       </Box>
-      <Box mb="$6">
+      <Box mb="$6" attributes={{ mt: '$12' }}>
         <Divider />
       </Box>
       <Stack
@@ -139,12 +142,19 @@ export function Footer() {
         space="$2"
         attributes={{
           justifyContent: 'center',
-          opacity: 0.5,
+          opacity: 0.6,
           fontSize: '$sm',
+          py: '$8',
         }}
       >
-          <Text>Built with <Link href="https://cosmology.zone/" target="_blank">Cosmology </Link> by BZE Alpha
-              Team. Powered by <Link href="https://getbze.com" target="_blank">BeeZee blockchain and BZE
+          <Text>Built with <Link href="https://cosmology.zone/" target="_blank" attributes={{
+            color: useColorModeValue('$purple600', '$purple300'),
+            fontWeight: '$medium',
+          }}>Cosmology</Link> by BZE Alpha
+              Team. Powered by <Link href="https://getbze.com" target="_blank" attributes={{
+            color: useColorModeValue('$purple600', '$purple300'),
+            fontWeight: '$medium',
+          }}>BeeZee blockchain and BZE
                   coin.</Link></Text>
       </Stack>
     </>

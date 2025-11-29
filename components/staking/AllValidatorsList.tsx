@@ -28,6 +28,7 @@ const AllValidatorsList = ({
   };
 }) => {
   const coin = getCoin(chainName);
+  const hasApr = !!validators[0]?.apr;
 
   const columns = useMemo(() => {
     const _columns: GridColumn[] = [
@@ -68,13 +69,15 @@ const AllValidatorsList = ({
         render: (validator) => (
           <Button
             variant="solid"
-            intent="secondary"
+            intent="tertiary"
             size="sm"
             onClick={() => {
               openModal();
               setSelectedValidator(validator);
             }}
-            attributes={{ ml: 'auto' }}
+            attributes={{
+              ml: 'auto',
+            }}
           >
             Manage
           </Button>
@@ -82,10 +85,8 @@ const AllValidatorsList = ({
       },
     ];
 
-    const hasApr = !!validators[0]?.apr;
-
     return _columns;
-  }, [chainName]);
+  }, [chainName, hasApr, validators, logos, openModal, setSelectedValidator, coin.symbol]);
 
   return (
     <ValidatorList

@@ -138,11 +138,16 @@ export const CancelUnbondingModal = ({
             onClick={onCancelClick}
             disabled={isCancelling}
             isLoading={isCancelling}
-            attributes={{ mr: '$4' }}
+            attributes={{
+              mr: '$4',
+            }}
           >
             Confirm Cancel
           </Button>
-          <Button variant="outlined" onClick={closeCancelModal}>
+          <Button
+            variant="outlined"
+            onClick={closeCancelModal}
+          >
             Close
           </Button>
         </Box>

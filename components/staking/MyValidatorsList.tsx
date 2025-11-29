@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import { Dispatch, SetStateAction } from 'react';
 import {
   Button,
@@ -10,7 +10,6 @@ import { ChainName } from 'cosmos-kit';
 import { getCoin } from '@/config';
 import { type ExtendedValidator as Validator } from '@/utils';
 import BigNumber from "bignumber.js";
-import {filter} from "rxjs";
 
 const MyValidatorsList = ({
   myValidators,
@@ -99,7 +98,9 @@ const MyValidatorsList = ({
                 openModal();
                 setSelectedValidator(validator);
               }}
-              attributes={{ ml: 'auto' }}
+              attributes={{
+                ml: 'auto',
+              }}
             >
               Manage
             </Button>

@@ -1,10 +1,12 @@
 import '@interchain-ui/react/styles';
 import '@interchain-ui/react/globalStyles';
+import '../styles/globals.css';
 
 import type { AppProps } from 'next/app';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import {wallets as keplrWallets} from '@cosmos-kit/keplr';
 import {wallets as leapWallets} from '@cosmos-kit/leap';
+import { useEffect } from 'react';
 
 import { SignerOptions } from 'cosmos-kit';
 import { ChainProvider } from '@cosmos-kit/react';
@@ -32,7 +34,14 @@ const queryClient = new QueryClient({
 });
 
 function CreateCosmosApp({ Component, pageProps }: AppProps) {
-  const { themeClass } = useTheme();
+  const { themeClass, theme } = useTheme();
+
+  // Fix background color for overscroll and scrollbar
+  useEffect(() => {
+    const backgroundColor = theme === 'dark' ? '#0f0f0f' : '#ffffff';
+    document.documentElement.style.backgroundColor = backgroundColor;
+    document.body.style.backgroundColor = backgroundColor;
+  }, [theme]);
 
   //@ts-ignore
   const customRegistry = new Registry([
@@ -91,6 +100,9 @@ function CreateCosmosApp({ Component, pageProps }: AppProps) {
             className={themeClass}
             minHeight="100dvh"
             backgroundColor={useColorModeValue('$white', '$background')}
+            attributes={{
+              transition: 'background-color 0.3s ease',
+            }}
           >
             {/* TODO fix type error */}
             {/* @ts-ignore */}
