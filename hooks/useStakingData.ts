@@ -18,6 +18,7 @@ import {
   parseDelegations,
   parseRewards,
   parseUnbondingDays,
+  parseUnbondingDelegations,
   parseValidators,
 } from '@/utils';
 
@@ -141,6 +142,25 @@ export const useStakingData = (chainName: string) => {
     },
   });
 
+  const unbondingDelegationsQuery =
+    cosmosQuery.staking.v1beta1.useDelegatorUnbondingDelegations({
+      request: {
+        delegatorAddr: address || '',
+        pagination: {
+          key: new Uint8Array(),
+          offset: 0n,
+          limit: 100n,
+          countTotal: true,
+          reverse: false,
+        },
+      },
+      options: {
+        enabled: isDataQueryEnabled,
+        select: ({ unbondingResponses }) =>
+          parseUnbondingDelegations(unbondingResponses, -exp),
+      },
+    });
+
   const unbondingDaysQuery = cosmosQuery.staking.v1beta1.useParams({
     options: {
       enabled: isDataQueryEnabled,
@@ -178,6 +198,7 @@ export const useStakingData = (chainName: string) => {
     rewards: rewardsQuery,
     allValidators: validatorsQuery,
     delegations: delegationsQuery,
+    unbondingDelegations: unbondingDelegationsQuery,
     unbondingDays: unbondingDaysQuery,
     annualProvisions: annualProvisionsQuery,
     pool: poolQuery,
@@ -199,6 +220,7 @@ export const useStakingData = (chainName: string) => {
     allQueries.rewards,
     allQueries.allValidators,
     allQueries.delegations,
+    allQueries.unbondingDelegations,
   ];
 
   useEffect(() => {

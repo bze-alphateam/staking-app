@@ -5,12 +5,13 @@ import type { AppProps } from 'next/app';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import {wallets as keplrWallets} from '@cosmos-kit/keplr';
 import {wallets as leapWallets} from '@cosmos-kit/leap';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { SignerOptions, wallets } from 'cosmos-kit';
+import { SignerOptions } from 'cosmos-kit';
 import { ChainProvider } from '@cosmos-kit/react';
-import { chains, assets } from 'chain-registry';
 import { GasPrice } from '@cosmjs/stargate';
+import { Registry } from '@cosmjs/proto-signing';
+import { defaultRegistryTypes } from '@cosmjs/stargate';
+import { cosmos } from 'interchain-query';
 
 import {
   Box,
@@ -33,6 +34,15 @@ const queryClient = new QueryClient({
 function CreateCosmosApp({ Component, pageProps }: AppProps) {
   const { themeClass } = useTheme();
 
+  //@ts-ignore
+  const customRegistry = new Registry([
+    ...defaultRegistryTypes,
+    [
+      '/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation',
+      cosmos.staking.v1beta1.MsgCancelUnbondingDelegation,
+    ],
+  ]);
+
   const signerOptions: SignerOptions = {
     preferredSignType: (chainName) => {
       return 'direct'
@@ -40,7 +50,7 @@ function CreateCosmosApp({ Component, pageProps }: AppProps) {
     // @ts-ignore
     signingStargate: (chain) => {
       const gasPrice = GasPrice.fromString('0.01ubze')
-      return { gasPrice };
+      return { gasPrice, registry: customRegistry };
     },
   };
 

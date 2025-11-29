@@ -4,6 +4,7 @@ import { Box, Spinner, Text } from '@interchain-ui/react';
 
 import Overview from './Overview';
 import { MyValidators } from './MyValidators';
+import { UnbondingDelegations } from './UnbondingDelegations';
 import { AllValidators } from './AllValidators';
 import { useStakingData, useValidatorLogos } from '@/hooks';
 
@@ -59,6 +60,17 @@ export const StakingSection = ({ chainName }: { chainName: ChainName }) => {
               logos={logos}
               prices={data.prices}
             />
+          )}
+
+          {data.unbondingDelegations.length > 0 && (
+              <UnbondingDelegations
+                  unbondingDelegations={data.unbondingDelegations}
+                  allValidators={data.allValidators}
+                  chainName={chainName}
+                  logos={logos}
+                  updateData={refetch}
+                  prices={data.prices}
+              />
           )}
 
           <AllValidators

@@ -7,6 +7,7 @@ import { isGreaterThanZero, shiftDigits, toNumber } from '.';
 import { Coin, decodeCosmosSdkDecFromProto } from '@cosmjs/stargate';
 import {
   QueryDelegatorDelegationsResponse,
+  QueryDelegatorUnbondingDelegationsResponse,
   QueryParamsResponse,
 } from 'interchain-query/cosmos/staking/v1beta1/query';
 import BigNumber from 'bignumber.js';
@@ -153,6 +154,24 @@ export const calcTotalDelegation = (delegations: ParsedDelegations) => {
   return delegations
     .reduce((prev, cur) => prev.plus(cur.amount), new BigNumber(0))
     .toString();
+};
+
+export type ParsedUnbondingDelegations = ReturnType<typeof parseUnbondingDelegations>;
+
+export const parseUnbondingDelegations = (
+  unbondingResponses: QueryDelegatorUnbondingDelegationsResponse['unbondingResponses'],
+  exponent: number
+) => {
+  if (!unbondingResponses) return [];
+
+  return unbondingResponses.flatMap(({ validatorAddress, entries }) =>
+    (entries || []).map((entry) => ({
+      validatorAddress: validatorAddress || '',
+      amount: shiftDigits(entry.balance || ZERO, exponent),
+      completionTime: entry.completionTime,
+      creationHeight: entry.creationHeight,
+    }))
+  );
 };
 
 export const parseUnbondingDays = (params: QueryParamsResponse['params']) => {
