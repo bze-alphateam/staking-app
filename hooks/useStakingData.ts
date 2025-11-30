@@ -103,7 +103,8 @@ export const useStakingData = (chainName: string) => {
   const validatorsQuery = cosmosQuery.staking.v1beta1.useValidators({
     request: {
       status: cosmos.staking.v1beta1.bondStatusToJSON(
-        cosmos.staking.v1beta1.BondStatus.BOND_STATUS_BONDED
+        cosmos.staking.v1beta1.BondStatus.BOND_STATUS_UNBONDED
+        // cosmos.staking.v1beta1.BondStatus.BOND_STATUS_BONDED
       ),
       pagination: {
         key: new Uint8Array(),
