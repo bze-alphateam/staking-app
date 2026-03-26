@@ -170,7 +170,7 @@ export function RedelegateModal({isOpen, onClose, sourceValidator, allValidators
                                                                 <Text fontSize="sm">{v.description?.moniker || truncateAddress(v.operator_address)}</Text>
                                                             </HStack>
                                                             <Text fontSize="xs" color="fg.muted">
-                                                                {new BigNumber(v.commission?.commission_rates?.rate ?? '0').multipliedBy(100).decimalPlaces(1).toString()}% fee
+                                                                {new BigNumber(v.commission?.commission_rates?.rate ?? '0').multipliedBy(100).decimalPlaces(1).toString()}% commission
                                                             </Text>
                                                         </HStack>
                                                     </Box>

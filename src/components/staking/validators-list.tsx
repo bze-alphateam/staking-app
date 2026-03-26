@@ -119,7 +119,7 @@ export function ValidatorsList({validators, onActionComplete, logos}: Validators
                                                 VP: {prettyAmount(votingPower)} {nativeAsset?.ticker}
                                             </Text>
                                             <Text>
-                                                Fee: {commission}%
+                                                Commission: {commission}%
                                             </Text>
                                         </HStack>
                                     </VStack>
