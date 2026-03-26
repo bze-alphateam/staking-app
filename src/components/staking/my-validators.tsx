@@ -12,20 +12,18 @@ import {
 } from '@bze/bze-ui-kit';
 import BigNumber from 'bignumber.js';
 import {ValidatorWithDelegation} from '@/hooks/useNativeStakingData';
-import {useState} from 'react';
+import {useState, useMemo} from 'react';
 import {DelegateModal} from './delegate-modal';
 import {UndelegateModal} from './undelegate-modal';
 import {RedelegateModal} from './redelegate-modal';
-import {ClaimRewardsModal} from './claim-rewards-modal';
+import {ClaimRewardsModal, ValidatorRewardEntry} from './claim-rewards-modal';
 import {ValidatorAvatar} from './validator-avatar';
 import type {ValidatorSDKType} from '@bze/bzejs/cosmos/staking/v1beta1/staking';
 import {BondStatus, bondStatusFromJSON} from '@bze/bzejs/cosmos/staking/v1beta1/staking';
-import type {UserNativeStakingRewards} from '@bze/bze-ui-kit';
 
 interface MyValidatorsProps {
     myValidators: ValidatorWithDelegation[];
     allValidators: ValidatorSDKType[];
-    pendingRewards?: UserNativeStakingRewards;
     onActionComplete: () => void;
     logos: Record<string, string>;
 }
@@ -36,12 +34,22 @@ function isValidatorActive(validator: ValidatorSDKType): boolean {
     return bondStatusFromJSON(validator.status) === BondStatus.BOND_STATUS_BONDED;
 }
 
-export function MyValidators({myValidators, allValidators, pendingRewards, onActionComplete, logos}: MyValidatorsProps) {
+export function MyValidators({myValidators, allValidators, onActionComplete, logos}: MyValidatorsProps) {
     const {nativeAsset} = useAssets();
     const {price: bzePrice} = useAssetPrice(nativeAsset?.denom ?? '');
     const decimals = nativeAsset?.decimals ?? 6;
     const [activeModal, setActiveModal] = useState<ModalType>(null);
     const [selectedValidator, setSelectedValidator] = useState<ValidatorWithDelegation | null>(null);
+
+    const rewardEntries: ValidatorRewardEntry[] = useMemo(() =>
+        myValidators.map(item => ({
+            validatorAddress: item.validator.operator_address,
+            moniker: item.validator.description?.moniker ?? '',
+            rewards: item.rewards,
+            logoUrl: logos[item.validator.operator_address],
+        })),
+        [myValidators, logos]
+    );
 
     if (myValidators.length === 0) {
         return null;
@@ -61,7 +69,7 @@ export function MyValidators({myValidators, allValidators, pendingRewards, onAct
         onActionComplete();
     };
 
-    const totalRewards = pendingRewards?.total.amount ?? new BigNumber(0);
+    const totalRewards = myValidators.reduce((sum, v) => sum.plus(v.rewards), new BigNumber(0));
     const totalRewardsHuman = uAmountToBigNumberAmount(totalRewards, decimals);
     const hasClaimableRewards = totalRewardsHuman.gt(0.0001);
 
@@ -245,9 +253,9 @@ export function MyValidators({myValidators, allValidators, pendingRewards, onAct
                 logos={logos}
             />
             <ClaimRewardsModal
-                isOpen={activeModal === 'claim' && !!pendingRewards}
+                isOpen={activeModal === 'claim'}
                 onClose={closeModal}
-                pendingRewards={pendingRewards ?? {total: {amount: new BigNumber(0), denom: ''}, validators: []}}
+                rewardEntries={rewardEntries}
                 onSuccess={handleActionComplete}
             />
         </Container>

@@ -77,7 +77,6 @@ export default function StakingPage() {
                 <MyValidators
                     myValidators={fullData.myValidators}
                     allValidators={fullData.allValidators}
-                    pendingRewards={fullData.stakingData.currentStaking?.pendingRewards}
                     onActionComplete={handleRefresh}
                     logos={logos}
                 />
