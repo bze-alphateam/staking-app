@@ -60,7 +60,7 @@ export function RedelegateModal({isOpen, onClose, sourceValidator, allValidators
                 if (!search) return true;
                 return (v.description?.moniker?.toLowerCase() ?? '').includes(search.toLowerCase());
             })
-            .slice(0, 20);
+            .sort((a, b) => new BigNumber(a.tokens).minus(new BigNumber(b.tokens)).toNumber());
     }, [allValidators, sourceValidator, search]);
 
     const handleRedelegate = async () => {
@@ -146,7 +146,7 @@ export function RedelegateModal({isOpen, onClose, sourceValidator, allValidators
                                                     size="sm"
                                                 />
                                             </Box>
-                                            <Box maxH="200px" overflowY="auto" borderWidth="1px" borderRadius="md">
+                                            <Box maxH="300px" overflowY="auto" borderWidth="1px" borderRadius="md">
                                                 {filteredValidators.map(v => (
                                                     <Box
                                                         key={v.operator_address}

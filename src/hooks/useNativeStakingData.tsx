@@ -103,7 +103,7 @@ export function useNativeStakingData() {
                 allValidators.forEach(v => validatorMap.set(v.operator_address, v));
 
                 myValidators = delegations
-                    .filter(d => d.delegation && validatorMap.has(d.delegation.validator_address))
+                    .filter(d => d.delegation && validatorMap.has(d.delegation.validator_address) && new BigNumber(d.balance?.amount ?? '0').gte(1))
                     .map(d => {
                         const valAddr = d.delegation!.validator_address;
                         const rewardEntry = rewards.rewards.find(r => r.validator_address === valAddr);

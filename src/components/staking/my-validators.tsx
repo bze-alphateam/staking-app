@@ -1,7 +1,7 @@
 'use client';
 
 import {Box, Container, Text, VStack, HStack, Badge, Button, Grid} from '@chakra-ui/react';
-import {LuArrowUpRight, LuArrowDownRight, LuShuffle, LuGift} from 'react-icons/lu';
+import {LuArrowUpRight, LuArrowDownRight, LuShuffle, LuGift, LuTriangleAlert} from 'react-icons/lu';
 import {
     useAssets,
     prettyAmount,
@@ -19,6 +19,7 @@ import {RedelegateModal} from './redelegate-modal';
 import {ClaimRewardsModal} from './claim-rewards-modal';
 import {ValidatorAvatar} from './validator-avatar';
 import type {ValidatorSDKType} from '@bze/bzejs/cosmos/staking/v1beta1/staking';
+import {BondStatus, bondStatusFromJSON} from '@bze/bzejs/cosmos/staking/v1beta1/staking';
 import type {UserNativeStakingRewards} from '@bze/bze-ui-kit';
 
 interface MyValidatorsProps {
@@ -30,6 +31,10 @@ interface MyValidatorsProps {
 }
 
 type ModalType = 'delegate' | 'undelegate' | 'redelegate' | 'claim' | null;
+
+function isValidatorActive(validator: ValidatorSDKType): boolean {
+    return bondStatusFromJSON(validator.status) === BondStatus.BOND_STATUS_BONDED;
+}
 
 export function MyValidators({myValidators, allValidators, pendingRewards, onActionComplete, logos}: MyValidatorsProps) {
     const {nativeAsset} = useAssets();
@@ -90,16 +95,18 @@ export function MyValidators({myValidators, allValidators, pendingRewards, onAct
                             .decimalPlaces(1)
                             .toString();
 
+                        const isInactive = !isValidatorActive(item.validator);
+
                         return (
                             <Box
                                 key={item.validator.operator_address}
                                 bg="bg.panel"
-                                borderWidth="1px"
-                                borderColor="purple.500/15"
+                                borderWidth={isInactive ? '2px' : '1px'}
+                                borderColor={isInactive ? 'red.500/40' : 'purple.500/15'}
                                 borderRadius="lg"
                                 p="5"
                                 transition="all 0.2s"
-                                _hover={{borderColor: 'purple.500/30', shadow: 'md'}}
+                                _hover={{borderColor: isInactive ? 'red.500/60' : 'purple.500/30', shadow: 'md'}}
                             >
                                 <VStack align="stretch" gap="4">
                                     <HStack justify="space-between">
@@ -122,6 +129,39 @@ export function MyValidators({myValidators, allValidators, pendingRewards, onAct
                                             <Badge colorPalette="red" size="sm">Jailed</Badge>
                                         )}
                                     </HStack>
+
+                                    {!isValidatorActive(item.validator) && (
+                                        <Box
+                                            bg="red.500/10"
+                                            borderWidth="1px"
+                                            borderColor="red.500/30"
+                                            borderRadius="md"
+                                            p="3"
+                                        >
+                                            <HStack gap="2" align="start">
+                                                <Box color="red.500" mt="0.5">
+                                                    <LuTriangleAlert size={16} />
+                                                </Box>
+                                                <VStack align="start" gap="1">
+                                                    <Text fontSize="xs" fontWeight="bold" color="red.500">
+                                                        Not Earning Rewards
+                                                    </Text>
+                                                    <Text fontSize="xs" color="fg.muted">
+                                                        This validator is {item.validator.jailed ? 'jailed' : item.validator.status === BondStatus.BOND_STATUS_UNBONDING ? 'unbonding' : 'inactive'} and not producing rewards. Redelegate to an active validator to continue earning.
+                                                    </Text>
+                                                    <Button
+                                                        size="xs"
+                                                        colorPalette="red"
+                                                        variant="solid"
+                                                        onClick={() => openModal('redelegate', item)}
+                                                        mt="1"
+                                                    >
+                                                        <LuShuffle /> Redelegate Now
+                                                    </Button>
+                                                </VStack>
+                                            </HStack>
+                                        </Box>
+                                    )}
 
                                     <VStack align="start" gap="1">
                                         <HStack justify="space-between" w="full">
