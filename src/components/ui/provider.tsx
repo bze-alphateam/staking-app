@@ -53,7 +53,6 @@ const system = createSystem(defaultConfig, {
 export function Provider({ children, ...props }: ColorModeProviderProps & { children: React.ReactNode }) {
     return (
         <ChainProvider
-            //@ts-expect-error wallets type mismatch between extension and core versions
             wallets={[keplrWallet, leapWallet, walletConnect]}
             signerOptions={{
                 preferredSignType: () => {

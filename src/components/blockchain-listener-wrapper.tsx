@@ -2,6 +2,7 @@
 
 import { useBlockchainListener } from '@/hooks/useBlockchainListener';
 import {useEffect} from "react";
+import {useWalletHealthCheck} from "@bze/bze-ui-kit";
 import {
     blockchainEventManager,
     CURRENT_WALLET_BALANCE_EVENT,
@@ -17,6 +18,7 @@ import { useStakingContext } from "@/hooks/useStakingContext";
 const POLLING_INTERVAL = 10 * 1000;
 
 export function BlockchainListenerWrapper() {
+    useWalletHealthCheck();
     const {isConnected} = useBlockchainListener();
     const {
         updateBalances,
