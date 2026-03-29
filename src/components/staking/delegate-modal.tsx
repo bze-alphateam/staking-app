@@ -74,9 +74,11 @@ export function DelegateModal({isOpen, onClose, validator, onSuccess}: DelegateM
                 },
             });
 
-            await tx([msg]);
-            toast.success('Delegation successful', `Delegated ${amount} ${nativeAsset?.ticker} to ${validator.description?.moniker}`);
-            onSuccess();
+            const success = await tx([msg]);
+            if (success) {
+                toast.success('Delegation successful', `Delegated ${amount} ${nativeAsset?.ticker} to ${validator.description?.moniker}`);
+                onSuccess();
+            }
         } catch (e) {
             console.error('Delegate failed:', e);
             toast.error('Delegation failed', 'Transaction failed. Please try again.');

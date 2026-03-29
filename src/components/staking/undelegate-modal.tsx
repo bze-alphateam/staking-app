@@ -69,9 +69,11 @@ export function UndelegateModal({isOpen, onClose, validator, delegatedAmount, on
                 },
             });
 
-            await tx([msg]);
-            toast.success('Undelegation started', `Undelegating ${amount} ${nativeAsset?.ticker} from ${validator.description?.moniker}`);
-            onSuccess();
+            const success = await tx([msg]);
+            if (success) {
+                toast.success('Undelegation started', `Undelegating ${amount} ${nativeAsset?.ticker} from ${validator.description?.moniker}`);
+                onSuccess();
+            }
         } catch (e) {
             console.error('Undelegate failed:', e);
             toast.error('Undelegation failed', 'Transaction failed. Please try again.');

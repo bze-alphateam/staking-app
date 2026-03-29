@@ -106,12 +106,13 @@ export function ClaimRewardsModal({isOpen, onClose, rewardEntries, onSuccess}: C
                 })
             );
 
-            await tx(messages);
-            toast.success('Rewards claimed!', `Claimed ${prettyAmount(selectedRewardsHuman)} ${nativeAsset?.ticker} from ${selectedValidators.size} validator${selectedValidators.size > 1 ? 's' : ''}`);
-            onSuccess();
+            const success = await tx(messages);
+            if (success) {
+                toast.success('Rewards claimed!', `Claimed ${prettyAmount(selectedRewardsHuman)} ${nativeAsset?.ticker} from ${selectedValidators.size} validator${selectedValidators.size > 1 ? 's' : ''}`);
+                onSuccess();
+            }
         } catch (e) {
             console.error('Claim rewards failed:', e);
-            toast.error('Claim failed', 'Transaction failed. Please try again.');
         } finally {
             setIsSubmitting(false);
         }

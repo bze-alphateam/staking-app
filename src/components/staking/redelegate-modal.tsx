@@ -88,9 +88,11 @@ export function RedelegateModal({isOpen, onClose, sourceValidator, allValidators
                 },
             });
 
-            await tx([msg]);
-            toast.success('Redelegation started', `Redelegated ${amount} ${nativeAsset?.ticker} to ${destValidator.description?.moniker}`);
-            onSuccess();
+            const success = await tx([msg]);
+            if (success) {
+                toast.success('Redelegation started', `Redelegated ${amount} ${nativeAsset?.ticker} to ${destValidator.description?.moniker}`);
+                onSuccess();
+            }
         } catch (e) {
             console.error('Redelegate failed:', e);
             toast.error('Redelegation failed', 'Transaction failed. Please try again.');
