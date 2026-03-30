@@ -64,7 +64,7 @@ export const NavbarLinks = ({ onLinkClick, ...props }: NavbarLinksProps) => {
                 {/* Other Items - Mobile: Inline, Desktop: Dropdown */}
 
                 {/* Mobile: Show items inline */}
-                <Box hideFrom="md">
+                {appsItems.length > 0 && <Box hideFrom="md">
                     <Text
                         fontWeight="medium"
                         color="fg.muted"
@@ -114,10 +114,10 @@ export const NavbarLinks = ({ onLinkClick, ...props }: NavbarLinksProps) => {
                             )
                         })}
                     </Stack>
-                </Box>
+                </Box>}
 
                 {/* Desktop: Show as dropdown menu */}
-                <Box hideBelow="md">
+                {appsItems.length > 0 && <Box hideBelow="md">
                     <Menu.Root>
                         <Menu.Trigger asChild>
                             <Text
@@ -178,7 +178,7 @@ export const NavbarLinks = ({ onLinkClick, ...props }: NavbarLinksProps) => {
                             </Menu.Positioner>
                         </Portal>
                     </Menu.Root>
-                </Box>
+                </Box>}
             </Stack>
         </>
     )
