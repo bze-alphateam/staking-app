@@ -2,7 +2,7 @@
 
 import {useState, useEffect, useMemo} from 'react';
 import {Box, Button, HStack, Input, Text, VStack, Dialog, Portal} from '@chakra-ui/react';
-import {LuTriangleAlert} from 'react-icons/lu';
+import {LuTriangleAlert, LuWallet} from 'react-icons/lu';
 import {
     useAssets,
     useBalance,
@@ -16,6 +16,7 @@ import {
 } from '@bze/bze-ui-kit';
 import {useChain} from '@interchain-kit/react';
 import {getChainName} from '@bze/bze-ui-kit';
+import {WalletState} from '@interchain-kit/core';
 import BigNumber from 'bignumber.js';
 import {cosmos} from '@bze/bzejs';
 import type {ValidatorSDKType} from '@bze/bzejs/cosmos/staking/v1beta1/staking';
@@ -30,7 +31,8 @@ interface DelegateModalProps {
 export function DelegateModal({isOpen, onClose, validator, onSuccess}: DelegateModalProps) {
     const {nativeAsset} = useAssets();
     const {balance} = useBalance(getChainNativeAssetDenom());
-    const {address} = useChain(getChainName());
+    const {address, status, connect} = useChain(getChainName());
+    const isConnected = status === WalletState.Connected;
     const {tx, progressTrack} = useSDKTx();
     const {toast} = useToast();
     const [amount, setAmount] = useState('');
@@ -134,12 +136,13 @@ export function DelegateModal({isOpen, onClose, validator, onSuccess}: DelegateM
                                         value={amount}
                                         onChange={(e) => setAmount(sanitizeNumberInput(e.target.value))}
                                         type="text"
+                                        disabled={!isConnected}
                                     />
                                     <HStack gap="2">
-                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.25)}>25%</Button>
-                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.5)}>50%</Button>
-                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.75)}>75%</Button>
-                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(1)}>Max</Button>
+                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.25)} disabled={!isConnected}>25%</Button>
+                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.5)} disabled={!isConnected}>50%</Button>
+                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(0.75)} disabled={!isConnected}>75%</Button>
+                                        <Button size="xs" variant="outline" onClick={() => setQuickAmount(1)} disabled={!isConnected}>Max</Button>
                                     </HStack>
                                 </VStack>
 
@@ -171,15 +174,25 @@ export function DelegateModal({isOpen, onClose, validator, onSuccess}: DelegateM
                                     <Text fontSize="xs" color="fg.muted" textAlign="center">{progressTrack}</Text>
                                 )}
 
-                                <Button
-                                    colorPalette="purple"
-                                    onClick={handleDelegate}
-                                    loading={isSubmitting}
-                                    disabled={!amount || new BigNumber(amount).lte(0) || !address}
-                                    w="full"
-                                >
-                                    Delegate {amount ? `${amount} ${nativeAsset?.ticker}` : ''}
-                                </Button>
+                                {!isConnected ? (
+                                    <Button
+                                        colorPalette="purple"
+                                        w="full"
+                                        onClick={() => { onClose(); connect(); }}
+                                    >
+                                        <LuWallet /> Connect Wallet
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        colorPalette="purple"
+                                        onClick={handleDelegate}
+                                        loading={isSubmitting}
+                                        disabled={!amount || new BigNumber(amount).lte(0) || !address}
+                                        w="full"
+                                    >
+                                        Delegate {amount ? `${amount} ${nativeAsset?.ticker}` : ''}
+                                    </Button>
+                                )}
                             </VStack>
                         </Dialog.Body>
 

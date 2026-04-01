@@ -67,7 +67,7 @@ export const TopNavBar = ({ appLabel = "STAKING" }: TopNavBarProps) => {
                                     </Button>
                                 }
                             >
-                                <WalletSidebarContent accentColor="purple" />
+                                <WalletSidebarContent accentColor="purple" skipWalletModal />
                             </Sidebar>
                         </ClientOnly>
                         <ClientOnly fallback={<Skeleton  w="10" h="10" rounded="md" />}>

@@ -14,9 +14,10 @@ import {
     truncateAddress,
 } from '@bze/bze-ui-kit';
 import {useChain} from '@interchain-kit/react';
+import {WalletState} from '@interchain-kit/core';
 import BigNumber from 'bignumber.js';
 import {cosmos} from '@bze/bzejs';
-import {LuGift, LuCheck} from 'react-icons/lu';
+import {LuGift, LuCheck, LuWallet} from 'react-icons/lu';
 import {ValidatorAvatar} from './validator-avatar';
 
 export interface ValidatorRewardEntry {
@@ -35,7 +36,8 @@ interface ClaimRewardsModalProps {
 
 export function ClaimRewardsModal({isOpen, onClose, rewardEntries, onSuccess}: ClaimRewardsModalProps) {
     const {nativeAsset} = useAssets();
-    const {address} = useChain(getChainName());
+    const {address, status, connect} = useChain(getChainName());
+    const isConnected = status === WalletState.Connected;
     const {tx, progressTrack} = useSDKTx();
     const {toast} = useToast();
     const {price: bzePrice} = useAssetPrice(nativeAsset?.denom ?? '');
@@ -250,25 +252,35 @@ export function ClaimRewardsModal({isOpen, onClose, rewardEntries, onSuccess}: C
                                     <Text fontSize="xs" color="fg.muted" textAlign="center">{progressTrack}</Text>
                                 )}
 
-                                <HStack gap="3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={onClose}
-                                        flex="1"
-                                        disabled={isSubmitting}
-                                    >
-                                        Cancel
-                                    </Button>
+                                {!isConnected ? (
                                     <Button
                                         colorPalette="purple"
-                                        onClick={handleClaim}
-                                        loading={isSubmitting}
-                                        disabled={!address || selectedValidators.size === 0}
-                                        flex="1"
+                                        w="full"
+                                        onClick={() => { onClose(); connect(); }}
                                     >
-                                        Claim{selectedValidators.size > 0 ? ` (${selectedValidators.size})` : ''}
+                                        <LuWallet /> Connect Wallet
                                     </Button>
-                                </HStack>
+                                ) : (
+                                    <HStack gap="3">
+                                        <Button
+                                            variant="outline"
+                                            onClick={onClose}
+                                            flex="1"
+                                            disabled={isSubmitting}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            colorPalette="purple"
+                                            onClick={handleClaim}
+                                            loading={isSubmitting}
+                                            disabled={!address || selectedValidators.size === 0}
+                                            flex="1"
+                                        >
+                                            Claim{selectedValidators.size > 0 ? ` (${selectedValidators.size})` : ''}
+                                        </Button>
+                                    </HStack>
+                                )}
                             </VStack>
                         </Dialog.Body>
 

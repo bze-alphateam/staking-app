@@ -6,7 +6,7 @@ import {
   type ColorModeProviderProps,
 } from "./color-mode"
 
-import { ChainProvider } from "@interchain-kit/react"
+import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react"
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { leapWallet } from "@interchain-kit/leap-extension";
 import { WCWallet } from "@interchain-kit/core";
@@ -64,6 +64,7 @@ export function Provider({ children, ...props }: ColorModeProviderProps & { chil
         >
             <ChakraProvider value={system}>
                 <ColorModeProvider {...props} >
+                    <InterchainWalletModal />
                     {children}
                 </ColorModeProvider>
             </ChakraProvider>

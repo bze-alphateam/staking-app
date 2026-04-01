@@ -57,7 +57,7 @@ export default function StakingPage() {
                                     </Button>
                                 }
                             >
-                                <WalletSidebarContent accentColor="purple" />
+                                <WalletSidebarContent accentColor="purple" skipWalletModal />
                             </Sidebar>
                         )}
                     </HStack>
