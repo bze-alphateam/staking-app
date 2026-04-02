@@ -4,7 +4,7 @@ import { Inter } from "next/font/google"
 
 import {Provider} from "@/components/ui/provider";
 import {TopNavBar} from "@/components/ui/navigation/navbar";
-import {Toaster, TestnetBanner, HubConnectorInit, setStorageKeyVersion, setDefaultTxMemo, getAppName} from "@bze/bze-ui-kit";
+import {Toaster, TestnetBanner, HubConnectorInit, SettingsProvider, setStorageKeyVersion, setDefaultTxMemo, getAppName} from "@bze/bze-ui-kit";
 import {AssetsProvider} from "@/contexts/assets_context";
 import {BlockchainListenerWrapper} from "@/components/blockchain-listener-wrapper";
 import {SecurityAuditWarning} from "@/components/security-audit-warning";
@@ -42,6 +42,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
           </head>
           <body>
             <Provider>
+              <SettingsProvider>
               <AssetsProvider>
                   <BlockchainListenerWrapper />
                   <TopNavBar appLabel={getAppName()} />
@@ -51,6 +52,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
                   <SecurityAuditWarning />
                   <TestnetBanner />
               </AssetsProvider>
+              </SettingsProvider>
             </Provider>
           </body>
       </html>
