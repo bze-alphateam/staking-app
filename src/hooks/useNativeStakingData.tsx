@@ -8,7 +8,7 @@ import {
     getAnnualProvisions, getDistributionParams, getStakingParams, getStakingPool,
     calcNativeStakingApr, parseUnbondingDays,
     useAssets,
-    getValidators, getDelegatorDelegations, getAddressUnbondingDelegations, getAddressRewards,
+    getValidators, getDelegatorValidators, getDelegatorDelegations, getAddressUnbondingDelegations, getAddressRewards,
 } from "@bze/bze-ui-kit";
 import BigNumber from "bignumber.js";
 import {ValidatorSDKType, DelegationResponseSDKType, UnbondingDelegationSDKType} from "@bze/bzejs/cosmos/staking/v1beta1/staking";
@@ -79,11 +79,13 @@ export function useNativeStakingData() {
             if (address) {
                 const [
                     delegations,
+                    delegatorValidators,
                     totalRewards,
                     unbonding,
                     rewards,
                 ] = await Promise.all([
                     getDelegatorDelegations(address),
+                    getDelegatorValidators(address),
                     getAddressNativeTotalRewards(address),
                     getAddressUnbondingDelegations(address),
                     getAddressRewards(address),
@@ -98,9 +100,13 @@ export function useNativeStakingData() {
                 unbondingDelegations = unbonding;
                 validatorRewards = rewards.rewards;
 
-                // Build my validators list
+                // Build my validators list. `allValidators` only contains bonded validators (used for
+                // the global list and dropdowns), so merge in `delegatorValidators` which includes any
+                // jailed/unbonding/unbonded validators the user has delegations with — otherwise those
+                // delegations would be silently hidden and users couldn't take action on them.
                 const validatorMap = new Map<string, ValidatorSDKType>();
                 allValidators.forEach(v => validatorMap.set(v.operator_address, v));
+                delegatorValidators.forEach(v => validatorMap.set(v.operator_address, v));
 
                 myValidators = delegations
                     .filter(d => d.delegation && validatorMap.has(d.delegation.validator_address) && new BigNumber(d.balance?.amount ?? '0').gte(1))
