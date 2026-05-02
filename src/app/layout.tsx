@@ -7,7 +7,6 @@ import {TopNavBar} from "@/components/ui/navigation/navbar";
 import {Toaster, TestnetBanner, HubConnectorInit, SettingsProvider, setStorageKeyVersion, setDefaultTxMemo, getAppName} from "@bze/bze-ui-kit";
 import {AssetsProvider} from "@/contexts/assets_context";
 import {BlockchainListenerWrapper} from "@/components/blockchain-listener-wrapper";
-import {SecurityAuditWarning} from "@/components/security-audit-warning";
 
 setStorageKeyVersion('4');
 setDefaultTxMemo('staking.getbze.com');
@@ -49,7 +48,6 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
                     {children}
                   <Toaster />
                   <HubConnectorInit />
-                  <SecurityAuditWarning />
                   <TestnetBanner />
               </AssetsProvider>
               </SettingsProvider>
